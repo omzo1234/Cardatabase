@@ -14,6 +14,7 @@ public UserDetailsServiceImpl(AppUserRepository repository) {
 this.repository = repository;
 }
 @Override
+
 public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
 {
 Optional<AppUser> user = repository.findByUsername(username);

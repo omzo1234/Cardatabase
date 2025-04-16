@@ -16,12 +16,17 @@ public class AppUser {
 
     @Column(nullable = false)
     private String role;
+     
 
+    public AppUser() {
+    }
+    
     public AppUser(String username, String password, String role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
+    
    public Long getId() {
        return id;
    }
