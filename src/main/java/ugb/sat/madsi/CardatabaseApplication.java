@@ -12,6 +12,8 @@ import ugb.sat.madsi.domain.CarRepository;
 import ugb.sat.madsi.domain.Car;
 import ugb.sat.madsi.domain.OwnerRepository;
 import ugb.sat.madsi.domain.Owner;
+import ugb.sat.madsi.domain.AppUser;
+import ugb.sat.madsi.domain.AppUserRepository;
 
 
 
@@ -22,10 +24,11 @@ public class CardatabaseApplication implements CommandLineRunner {
 
 	private final CarRepository repository;
 	private final OwnerRepository orepository;
-
-	public CardatabaseApplication(CarRepository repository, OwnerRepository orepository) {
+	private final AppUserRepository urepository;
+	public CardatabaseApplication(CarRepository repository, OwnerRepository orepository, AppUserRepository urepository) {
 		this.repository = repository;
 		this.orepository = orepository;
+		this.urepository = urepository;
 	}
 
 	public static void main(String[] args) {
@@ -43,9 +46,18 @@ public class CardatabaseApplication implements CommandLineRunner {
 		repository.save(new Car("Nissan", "Leaf", "White", "SSJ-3002", 2020, 29000, owner2));
 		repository.save(new Car("Toyota", "Prius", "Silver", "KKO-0212", 2022, 39000, owner2));
 		
+		
 		// Fetch all cars and log to console
 		for (Car car : repository.findAll()) {
 			logger.info("brand: {}, model: {}", car.getBrand(), car.getModel());
-		}	
-	}
+		}
+		
+		// Nom d'utilisateur : user, mot de passe : user
+		urepository.save(new AppUser("user",
+	"$2a$10$NVM0n8ElaRgg7zWO1CxUdei7vWoPg91Lz2aYavh9.f9q0e4bRadue", "USER"));
+// Nom d'utilisateur : admin, mot de passe : admin
+	urepository.save(new AppUser("admin",
+	"$2a$10$8cjz47bjbR4Mn8GMg9IZx.vyjhLXR/SKKMSZ9.mP9vpMu0ssKi8GW", "ADMIN"));
+		}
+		
 }

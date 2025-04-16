@@ -1,27 +1,26 @@
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
+import
+org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import ugb.sat.madsi.service.UserDetailsServiceImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Désactive CSRF si non nécessaire
-                .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll() // Autorise Swagger
-                                .anyRequest().authenticated() // Exige une authentification pour toutes les autres requêtes
-                )
-                .formLogin(withDefaults()); // Active la redirection vers une page de connexion
-        return http.build();
-    }
-
-    private Customizer<FormLoginConfigurer<HttpSecurity>> withDefaults() {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'withDefaults'");
-    }
+private final UserDetailsServiceImpl userDetailsService;
+public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+this.userDetailsService = userDetailsService;
+}
+public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+auth.userDetailsService(userDetailsService)
+.passwordEncoder(new BCryptPasswordEncoder());
+}
+@Bean
+public PasswordEncoder passwordEncoder() {
+return new BCryptPasswordEncoder();
+}
 }
